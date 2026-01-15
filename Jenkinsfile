@@ -1,7 +1,12 @@
 pipeline {
     agent any
 
+    tools {
+        maven 'maven-3.9.12'
+    }
+
     stages {
+
         stage('Checkout Code') {
             steps {
                 git branch: 'main',
@@ -9,9 +14,17 @@ pipeline {
             }
         }
 
-        stage('Verify Files') {
+        stage('Verify Workspace') {
             steps {
                 bat 'dir'
+            }
+        }
+
+        stage('Build Backend') {
+            steps {
+                dir('backend') {
+                    bat 'mvn clean package -DskipTests'
+                }
             }
         }
     }
