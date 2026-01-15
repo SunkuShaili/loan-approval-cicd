@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'maven-3.9.12'
-        jdk 'Java17'
-    }
-
     stages {
 
         stage('Checkout Code') {
@@ -21,7 +16,7 @@ pipeline {
             }
         }
 
-        stage('Build Backend') {
+        stage('Build Backend (Maven)') {
             steps {
                 dir('backend') {
                     bat 'mvn clean package -DskipTests'
@@ -29,12 +24,16 @@ pipeline {
             }
         }
 
-        stage('Check Docker') {
+        stage('Build Docker Images') {
             steps {
-                bat 'docker --version'
-                bat 'docker compose version'
+                bat 'docker compose build'
             }
         }
 
+        stage('Deploy Containers') {
+            steps {
+                bat 'docker compose up -d'
+            }
+        }
     }
 }
