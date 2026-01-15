@@ -3,7 +3,7 @@ pipeline {
 
     tools {
         jdk 'Java17'
-        maven 'Maven3'
+        maven 'maven-3.9.12'
     }
 
     stages {
@@ -15,11 +15,9 @@ pipeline {
             }
         }
 
-        stage('Verify Environment') {
+        stage('Verify Workspace') {
             steps {
-                bat 'java -version'
-                bat 'mvn -version'
-                bat 'docker --version'
+                bat 'dir'
             }
         }
 
