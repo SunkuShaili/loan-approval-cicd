@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    tools {
+        jdk 'Java17'
+        maven 'Maven3'
+    }
+
     stages {
 
         stage('Checkout Code') {
@@ -10,9 +15,11 @@ pipeline {
             }
         }
 
-        stage('Verify Workspace') {
+        stage('Verify Environment') {
             steps {
-                bat 'dir'
+                bat 'java -version'
+                bat 'mvn -version'
+                bat 'docker --version'
             }
         }
 
