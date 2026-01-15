@@ -1,0 +1,102 @@
+<h3>Loans</h3>
+
+<p *ngIf="loading" class="loading-text">
+  Loading loans...
+</p>
+
+<table
+  class="loan-table"
+  *ngIf="!loading && loans.length > 0; else noLoans"
+>
+  <thead>
+    <tr>
+      <th *ngIf="isAdmin">Client Name</th>
+      <th *ngIf="isAdmin">Email</th>
+
+      <th>Amount</th>
+      <th>Tenure</th>
+      <th>Type</th>
+      <th>EMI</th>
+      <th>Status</th>
+
+      <th *ngIf="isAdmin">Actions</th>
+      <th *ngIf="!isAdmin">Submit</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let loan of loans">
+
+      <td *ngIf="isAdmin">{{ loan.clientName }}</td>
+      <td *ngIf="isAdmin">{{ loan.applicantEmail }}</td>
+
+      <td>₹ {{ loan.amount | number }}</td>
+      <td>{{ loan.tenureMonths }} months</td>
+      <td>{{ loan.loanType }}</td>
+      <td>₹ {{ loan.emi | number:'1.0-0' }}</td>
+
+      <td>
+        <span
+          class="status-badge"
+          [ngClass]="loan.status.toLowerCase()"
+        >
+          {{ loan.status }}
+        </span>
+      </td>
+
+      
+              <!-- ADMIN ACTIONS -->
+      <td *ngIf="isAdmin" class="action-cell">
+
+        <!-- Review -->
+        <button
+          *ngIf="loan.status === 'SUBMITTED'"
+          class="review-btn"
+          (click)="confirmReview(loan.id)">
+          Review
+        </button>
+
+        <!-- Approve -->
+        <button
+          *ngIf="loan.status === 'UNDER_REVIEW'"
+          class="approve-btn"
+          (click)="confirmApprove(loan.id)">
+          Approve
+        </button>
+
+        <!-- Reject -->
+        <button
+          *ngIf="loan.status === 'UNDER_REVIEW'"
+          class="reject-btn"
+          (click)="confirmReject(loan.id)">
+          Reject
+        </button>
+
+        <!-- Delete -->
+        <button
+          *ngIf="loan.status === 'DRAFT' || loan.status === 'REJECTED'"
+          class="delete-btn"
+          (click)="confirmDelete(loan.id)">
+          Delete
+        </button>
+
+      </td>
+
+      <!-- USER SUBMIT -->
+    <td *ngIf="!isAdmin" class="action-cell">
+      <button
+        *ngIf="loan.status === 'DRAFT'"
+        class="submit-btn"
+        (click)="confirmSubmit(loan.id)">
+        Submit
+      </button>
+    </td>
+
+
+    </tr>
+  </tbody>
+</table>
+
+<ng-template #noLoans>
+  <p *ngIf="!loading">No loans found.</p>
+</ng-template>

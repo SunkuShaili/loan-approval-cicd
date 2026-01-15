@@ -1,0 +1,157 @@
+/* Page container */
+.apply-loan-card {
+  max-width: 420px;
+  margin: 40px auto;
+  padding: 28px 32px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Heading */
+.apply-loan-card h2 {
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 22px;
+  color: #1f2937;
+}
+
+/* Form layout */
+.loan-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Labels */
+.loan-form label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+/* Inputs & select */
+.loan-form input,
+.loan-form select {
+  height: 38px;
+  padding: 6px 10px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.loan-form input:focus,
+.loan-form select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+/* Financials section */
+.loan-form h3 {
+  margin-top: 18px;
+  margin-bottom: 6px;
+  font-size: 16px;
+  color: #111827;
+  border-left: 4px solid #2563eb;
+  padding-left: 8px;
+}
+
+/* Financials group */
+[formGroupName="financials"] {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+/* Submit button */
+.loan-form button {
+  margin-top: 12px;
+  height: 42px;
+  background-color: #2563eb;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.loan-form button:hover:not(:disabled) {
+  background-color: #1e40af;
+}
+
+.loan-form button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.loan-form button:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Messages */
+.error {
+  margin-top: 10px;
+  color: #dc2626;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.success {
+  margin-top: 10px;
+  color: #16a34a;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.financials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 10px;
+}
+
+.financials-grid > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.financials-grid label {
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+
+
+/* ================= EMI PREVIEW ================= */
+
+.emi-preview {
+  margin-top: 14px;
+  padding: 14px 16px;
+  background: #f0f7ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+}
+
+.emi-preview h4 {
+  margin-bottom: 10px;
+  font-size: 15px;
+  color: #1e3a8a;
+}
+
+.emi-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  font-size: 14px;
+  color: #1f2937;
+}
+
+.emi-row strong {
+  color: #111827;
+}
+

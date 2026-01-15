@@ -1,0 +1,124 @@
+.loan-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+  margin-top: 16px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.loan-table thead {
+  background: #1f2937;
+  color: #ffffff;
+}
+
+.loan-table th,
+.loan-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.loan-table tr:hover {
+  background-color: #dff29a;
+}
+
+/* STATUS BADGES */
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.status-badge.draft {
+  background-color: #6b7280; 
+}
+
+.status-badge.submitted {
+  background-color: #2563eb; 
+}
+
+.status-badge.under_review {
+  background-color: #f59e0b; 
+}
+
+.status-badge.approved {
+  background-color: #16a34a; 
+}
+
+.status-badge.rejected {
+  background-color: #dc2626; 
+}
+
+
+.loading-text {
+  margin-top: 12px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/*------------------*/
+
+.loan-table button {
+  padding: 6px 14px;
+  font-size: 13px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease-in-out;
+}
+
+.review-btn {
+  background-color: #f59e0b;
+  color: white;
+}
+
+.review-btn:hover {
+  background-color: #f59e0b;
+}
+
+
+.approve-btn {
+  background-color: #22c55e; /* green */
+  color: white;
+  margin-right: 6px;
+}
+
+.approve-btn:hover {
+  background-color: #16a34a;
+}
+
+
+.reject-btn {
+  background-color: #ef4444; /* red */
+  color: white;
+}
+
+.reject-btn:hover {
+  background-color: #dc2626;
+}
+
+
+.submit-btn {
+  background-color: #2563eb; /* blue */
+  color: white;
+}
+
+.submit-btn:hover {
+  background-color: #1d4ed8;
+}
+
+
+.delete-btn {
+  background-color: #6b7280; /* gray */
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #4b5563;
+}

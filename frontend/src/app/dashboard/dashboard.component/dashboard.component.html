@@ -1,0 +1,38 @@
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <h2 class="logo">LoanSystem</h2>
+
+    <!-- USER MENU -->
+    <ul *ngIf="role === 'USER'">
+      <li routerLink="/dashboard">Dashboard</li>
+      <li routerLink="/dashboard/loans">My Loans</li>
+      <li routerLink="/dashboard/apply-loan">Apply Loan</li>
+    </ul>
+
+    <!-- ADMIN MENU -->
+    <ul *ngIf="role === 'ADMIN'">
+      <li routerLink="/dashboard">Dashboard</li>
+      <li routerLink="/dashboard/review-loans">Review Loans</li>
+      <li routerLink="/dashboard/users">Manage Users</li>
+    </ul>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <header class="topbar">
+      <span>{{ email }}</span>
+      <button (click)="logout()">Logout</button>
+    </header>
+
+    <section class="content">
+      <h2 *ngIf="role === 'USER'">User Dashboard</h2>
+      <h2 *ngIf="role === 'ADMIN'">Admin Dashboard</h2>
+
+      <p>Welcome to the Loan Approval System</p>
+    </section>
+    <router-outlet></router-outlet>
+  </main>
+
+</div>
