@@ -4,7 +4,6 @@ pipeline {
     tools {
         jdk 'Java17'
         maven 'maven-3.9.12'
-        nodejs 'NodeJS-20'
     }
 
     stages {
@@ -45,16 +44,19 @@ pipeline {
         }
 
 
-        stage('Build Frontend (Angular)') {
+       stage('Build Frontend') {
             steps {
                 dir('frontend') {
                     bat '''
+                    node -v
+                    npm -v
                     npm install
                     npm run build
                     '''
                 }
             }
         }
+
 
 
 
