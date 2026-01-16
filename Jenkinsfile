@@ -62,24 +62,34 @@ pipeline {
         }
 
 
+        stage('List Docker Images') {
+            steps {
+                bat '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" images'
+            }
+        }
+
+
+
         stage('Tag Backend Image') {
             steps {
                 bat '''
-                "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" tag loan-backend-comp:latest ^
+                "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" tag loan-backend-com:latest ^
                 666694853488.dkr.ecr.ap-south-2.amazonaws.com/loan-backend-comp:latest
                 '''
             }
         }
 
 
+
         stage('Tag Frontend Image') {
             steps {
                 bat '''
-                "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" tag loan-frontend-comp:latest ^
+                "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" tag loan-frontend-com:latest ^
                 666694853488.dkr.ecr.ap-south-2.amazonaws.com/loan-frontend-comp:latest
                 '''
             }
         }
+
 
 
         stage('Verify Tagged Images') {
