@@ -109,7 +109,7 @@ pipeline {
             steps {
                 bat """
                 %DOCKER_PATH% build --no-cache -t loan-backend-comp:1.0 backend
-                %DOCKER_PATH% build --no-cache -t loan-frontend-comp:2.0 frontend
+                %DOCKER_PATH% build --no-cache -t loan-frontend-comp:3.0 frontend
                 """
             }
         }
@@ -120,8 +120,8 @@ pipeline {
                 %DOCKER_PATH% tag loan-backend-comp:1.0 ^
                 %ECR_REGISTRY%/loan-backend-comp:1.0
 
-                %DOCKER_PATH% tag loan-frontend-comp:2.0 ^
-                %ECR_REGISTRY%/loan-frontend-comp:2.0
+                %DOCKER_PATH% tag loan-frontend-comp:3.0 ^
+                %ECR_REGISTRY%/loan-frontend-comp:3.0
                 """
             }
         }
@@ -130,7 +130,7 @@ pipeline {
             steps {
                 bat """
                 %DOCKER_PATH% push %ECR_REGISTRY%/loan-backend-comp:1.0
-                %DOCKER_PATH% push %ECR_REGISTRY%/loan-frontend-comp:2.0
+                %DOCKER_PATH% push %ECR_REGISTRY%/loan-frontend-comp:3.0
                 """
             }
         }
@@ -151,7 +151,7 @@ pipeline {
 
     post {
         success {
-            echo '✅ CI pipeline SUCCESS: Backend 1.0 & Frontend 2.0 pushed to ECR'
+            echo '✅ CI pipeline SUCCESS: Backend 1.0 & Frontend 3.0 pushed to ECR'
         }
         failure {
             echo '❌ CI pipeline FAILED: Check logs above'
