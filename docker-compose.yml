@@ -26,7 +26,63 @@ services:
   mongodb:
     image: mongo:6.0
     container_name: mongodb
+    volumes:version: "3.8"
+
+services:
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+    restart: always
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    restart: always
+
+  mongodb:
+    image: mongo:6.0
+    container_name: mongodb
     volumes:
+      - mongo_data:/data/db
+    restart: always
+
+  backend:
+    image: 666694853488.dkr.ecr.ap-south-2.amazonaws.com/loan-backend-comp:1.0
+    container_name: backend
+    depends_on:
+      - mongodb
+      - kafka
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/loan_db
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    restart: always
+
+  frontend:
+    image: 666694853488.dkr.ecr.ap-south-2.amazonaws.com/loan-frontend-comp:1.0
+    container_name: frontend
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+    restart: always
+
+volumes:
+  mongo_data:
+
       - mongo_data:/data/db
     restart: always
 

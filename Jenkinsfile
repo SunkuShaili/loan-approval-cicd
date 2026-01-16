@@ -34,6 +34,8 @@ pipeline {
             }
         }
 
+        /* ================= BACKEND ================= */
+
         stage('Build Backend (Maven)') {
             steps {
                 dir('backend') {
@@ -50,6 +52,8 @@ pipeline {
             }
         }
 
+        /* ================= FRONTEND ================= */
+
         stage('Build Frontend (Angular)') {
             steps {
                 dir('frontend') {
@@ -63,12 +67,11 @@ pipeline {
             }
         }
 
+        /* ================= DOCKER ================= */
+
         stage('Docker Version Check') {
             steps {
-                bat '''
-                %DOCKER_PATH% --version
-                %DOCKER_PATH% compose version
-                '''
+                bat '%DOCKER_PATH% --version'
             }
         }
 
@@ -88,9 +91,12 @@ pipeline {
             }
         }
 
-        stage('Build Docker Images (Compose)') {
+        stage('Build Docker Images') {
             steps {
-                bat '%DOCKER_PATH% compose build'
+                bat """
+                %DOCKER_PATH% build -t loan-backend-comp:1.0 backend
+                %DOCKER_PATH% build --no-cache -t loan-frontend-comp:2.0 frontend
+                """
             }
         }
 
@@ -100,8 +106,8 @@ pipeline {
                 %DOCKER_PATH% tag loan-backend-comp:1.0 ^
                 %ECR_REGISTRY%/loan-backend-comp:1.0
 
-                %DOCKER_PATH% tag loan-frontend-comp:1.0 ^
-                %ECR_REGISTRY%/loan-frontend-comp:1.0
+                %DOCKER_PATH% tag loan-frontend-comp:2.0 ^
+                %ECR_REGISTRY%/loan-frontend-comp:2.0
                 """
             }
         }
@@ -110,26 +116,25 @@ pipeline {
             steps {
                 bat """
                 %DOCKER_PATH% push %ECR_REGISTRY%/loan-backend-comp:1.0
-                %DOCKER_PATH% push %ECR_REGISTRY%/loan-frontend-comp:1.0
+                %DOCKER_PATH% push %ECR_REGISTRY%/loan-frontend-comp:2.0
                 """
             }
         }
 
-    stage('Show Frontend Dockerfile') {
-        steps {
-            dir('frontend') {
-                bat 'type Dockerfile'
+        /* ================= VERIFICATION ================= */
+
+        stage('Show Frontend Dockerfile') {
+            steps {
+                dir('frontend') {
+                    bat 'type Dockerfile'
+                }
             }
         }
     }
 
-
-    }
-
-    
     post {
         success {
-            echo '✅ CI Pipeline completed successfully. Images pushed to ECR.'
+            echo '✅ CI pipeline completed successfully. Backend 1.0 and Frontend 2.0 pushed to ECR.'
         }
         failure {
             echo '❌ Pipeline failed. Check logs above.'
