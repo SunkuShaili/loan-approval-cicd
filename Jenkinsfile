@@ -114,7 +114,6 @@ pipeline {
                 """
             }
         }
-    }
 
     stage('Show Frontend Dockerfile') {
         steps {
@@ -125,10 +124,9 @@ pipeline {
     }
 
 
+    }
 
-
-
-
+    
     post {
         success {
             echo '✅ CI Pipeline completed successfully. Images pushed to ECR.'
