@@ -8,11 +8,13 @@ pipeline {
 
     stages {
 
-        stage('AWS Identity Check') {
+       stage('AWS Identity Check') {
             steps {
+                bat 'aws --version'
                 bat 'aws sts get-caller-identity'
             }
         }
+
 
         stage('Checkout Code') {
             steps {
