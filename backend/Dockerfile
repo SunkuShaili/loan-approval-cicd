@@ -2,8 +2,10 @@ FROM eclipse-temurin:17-jre
 
 WORKDIR /app
 
-COPY target/*.jar app.jar
+# Copy the built JAR (renamed during CI to avoid version issues)
+COPY target/app.jar app.jar
 
 EXPOSE 8080
 
-ENTRYPOINT ["java","-jar","app.jar"]
+# JVM tuning for EC2 (prevents OOM on small instances)
+ENTRYPOINT ["java","-Xms256m","-Xmx512m","-jar","app.jar"]

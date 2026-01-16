@@ -7,32 +7,30 @@ pipeline {
         nodejs 'NodeJS-20'
     }
 
+    environment {
+        AWS_ACCOUNT_ID = '666694853488'
+        AWS_REGION     = 'ap-south-2'
+        ECR_REGISTRY   = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
+        DOCKER_PATH    = '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe"'
+    }
+
     stages {
 
-       stage('AWS Identity Check') {
+        stage('AWS Identity Check') {
             steps {
                 withCredentials([
                     [$class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'aws-jenkins']
+                     credentialsId: 'aws-jenkins']
                 ]) {
                     bat 'aws sts get-caller-identity'
                 }
             }
         }
 
-
-
-
         stage('Checkout Code') {
             steps {
                 git branch: 'main',
                     url: 'https://github.com/SunkuShaili/loan-approval-cicd.git'
-            }
-        }
-
-        stage('Verify Workspace') {
-            steps {
-                bat 'dir'
             }
         }
 
@@ -44,8 +42,15 @@ pipeline {
             }
         }
 
+        stage('Prepare Backend JAR') {
+            steps {
+                dir('backend') {
+                    bat 'copy target\\*SNAPSHOT.jar target\\app.jar'
+                }
+            }
+        }
 
-       stage('Build Frontend') {
+        stage('Build Frontend (Angular)') {
             steps {
                 dir('frontend') {
                     bat '''
@@ -58,113 +63,65 @@ pipeline {
             }
         }
 
-
-
-
-        stage('Docker Check') {
+        stage('Docker Version Check') {
             steps {
                 bat '''
-                "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" --version
-                "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" compose version
+                %DOCKER_PATH% --version
+                %DOCKER_PATH% compose version
                 '''
             }
         }
-
-        stage('Build Docker Images') {
-            steps {
-                bat '''
-                "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" compose build
-                '''
-            }
-        }
-
-
-        // stage('List Docker Images') {
-        //     steps {
-        //         bat '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" images'
-        //     }
-        // }
-
-
-
-        stage('Tag Backend Image') {
-            steps {
-                bat '''
-                "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" tag loan-backend-comp:1.0 ^
-                666694853488.dkr.ecr.ap-south-2.amazonaws.com/loan-backend-comp:1.0
-                '''
-            }
-        }
-
-
-        stage('Tag Frontend Image') {
-            steps {
-                bat '''
-                "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" tag loan-frontend-comp:1.0 ^
-                666694853488.dkr.ecr.ap-south-2.amazonaws.com/loan-frontend-comp:1.0
-                '''
-            }
-        }
-
-        // stage('Verify Tagged Images') {
-        //     steps {
-        //         bat '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" images | findstr loan'
-        //     }
-        // }
-
-
-        stage('Push Backend Image to ECR') {
-            steps {
-                bat '''
-                "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" push ^
-                666694853488.dkr.ecr.ap-south-2.amazonaws.com/loan-backend-comp:1.0
-                '''
-            }
-        }
-
-
-        stage('Push Frontend Image to ECR') {
-            steps {
-                bat '''
-                "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" push ^
-                666694853488.dkr.ecr.ap-south-2.amazonaws.com/loan-frontend-comp:1.0
-                '''
-            }
-        }
-
-
-
-
-        stage('Deploy Containers') {
-            steps {
-                bat '''
-                "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" compose up -d
-                '''
-            }
-        }
-
 
         stage('Login to AWS ECR') {
             steps {
                 withCredentials([
                     [$class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'aws-jenkins']
+                     credentialsId: 'aws-jenkins']
                 ]) {
-                    bat '''
-                    aws ecr get-login-password --region ap-south-2 ^
-                    | "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" login ^
+                    bat """
+                    aws ecr get-login-password --region %AWS_REGION% ^
+                    | %DOCKER_PATH% login ^
                     --username AWS ^
-                    --password-stdin 666694853488.dkr.ecr.ap-south-2.amazonaws.com
-                    '''
-
+                    --password-stdin %ECR_REGISTRY%
+                    """
                 }
             }
         }
 
+        stage('Build Docker Images (Compose)') {
+            steps {
+                bat '%DOCKER_PATH% compose build'
+            }
+        }
 
+        stage('Tag Docker Images') {
+            steps {
+                bat """
+                %DOCKER_PATH% tag loan-backend-comp:1.0 ^
+                %ECR_REGISTRY%/loan-backend-comp:1.0
 
+                %DOCKER_PATH% tag loan-frontend-comp:1.0 ^
+                %ECR_REGISTRY%/loan-frontend-comp:1.0
+                """
+            }
+        }
 
+        stage('Push Images to ECR') {
+            steps {
+                bat """
+                %DOCKER_PATH% push %ECR_REGISTRY%/loan-backend-comp:1.0
+                %DOCKER_PATH% push %ECR_REGISTRY%/loan-frontend-comp:1.0
+                """
+            }
+        }
+    }
 
-
-      }
+    post {
+        success {
+            echo '✅ CI Pipeline completed successfully. Images pushed to ECR.'
+        }
+        failure {
+            echo '❌ Pipeline failed. Check logs above.'
+        }
+    }
 }
