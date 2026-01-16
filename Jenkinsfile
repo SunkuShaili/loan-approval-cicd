@@ -61,6 +61,16 @@ pipeline {
             }
         }
 
+
+        stage('List Docker Images') {
+            steps {
+                bat '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" images'
+            }
+        }
+
+
+
+
         stage('Deploy Containers') {
             steps {
                 bat '''
