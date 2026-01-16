@@ -47,8 +47,24 @@ pipeline {
         stage('Docker Check') {
             steps {
                 bat '''
-                docker --version
-                docker compose version
+                "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" --version
+                "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" compose version
+                '''
+            }
+        }
+
+        stage('Build Docker Images') {
+            steps {
+                bat '''
+                "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" compose build
+                '''
+            }
+        }
+
+        stage('Deploy Containers') {
+            steps {
+                bat '''
+                "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" compose up -d
                 '''
             }
         }
@@ -56,16 +72,5 @@ pipeline {
 
 
 
-        stage('Build Docker Images') {
-            steps {
-                bat 'docker compose build'
-            }
-        }
-
-        stage('Deploy Containers') {
-            steps {
-                bat 'docker compose up -d'
-            }
-        }
-    }
+      }
 }
