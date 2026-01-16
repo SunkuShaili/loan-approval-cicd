@@ -96,6 +96,26 @@ pipeline {
         }
 
 
+        stage('Push Backend Image to ECR') {
+            steps {
+                bat '''
+                "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" push ^
+                666694853488.dkr.ecr.ap-south-2.amazonaws.com/loan-backend-comp:1.0
+                '''
+            }
+        }
+
+
+        stage('Push Frontend Image to ECR') {
+            steps {
+                bat '''
+                "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" push ^
+                666694853488.dkr.ecr.ap-south-2.amazonaws.com/loan-frontend-comp:1.0
+                '''
+            }
+        }
+
+
 
 
         stage('Deploy Containers') {
