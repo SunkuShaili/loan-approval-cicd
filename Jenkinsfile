@@ -52,15 +52,19 @@ pipeline {
                     bat '''
                     echo Preparing backend JAR...
                     dir target
-                    for %f in (target\\*SNAPSHOT.jar) do (
-                      echo Copying %f to app.jar
-                      copy /Y %f target\\app.jar
+
+                    for %%f in (target\\*SNAPSHOT.jar) do (
+                        echo Copying %%f to app.jar
+                        copy /Y %%f target\\app.jar
                     )
+
+                    echo Verifying app.jar
                     dir target\\app.jar
                     '''
                 }
             }
         }
+
 
         /* ================= FRONTEND ================= */
 
