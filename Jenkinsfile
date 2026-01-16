@@ -70,14 +70,17 @@ pipeline {
         }
 
 
-        stage('ECR Login') {
+        stage('Login to AWS ECR') {
             steps {
                 bat '''
                 aws ecr get-login-password --region ap-south-2 ^
-                | docker login --username AWS --password-stdin 666694853488.dkr.ecr.ap-south-2.amazonaws.com
+                | "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" login ^
+                --username AWS ^
+                --password-stdin 666694853488.dkr.ecr.ap-south-2.amazonaws.com
                 '''
             }
         }
+
 
 
 
