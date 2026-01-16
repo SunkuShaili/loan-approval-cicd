@@ -62,11 +62,11 @@ pipeline {
         }
 
 
-        stage('List Docker Images') {
-            steps {
-                bat '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" images'
-            }
-        }
+        // stage('List Docker Images') {
+        //     steps {
+        //         bat '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" images'
+        //     }
+        // }
 
 
 
@@ -89,11 +89,11 @@ pipeline {
             }
         }
 
-        stage('Verify Tagged Images') {
-            steps {
-                bat '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" images | findstr loan'
-            }
-        }
+        // stage('Verify Tagged Images') {
+        //     steps {
+        //         bat '"C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe" images | findstr loan'
+        //     }
+        // }
 
 
         stage('Push Backend Image to ECR') {
