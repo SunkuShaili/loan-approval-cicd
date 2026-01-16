@@ -46,11 +46,13 @@ pipeline {
 
         stage('Docker Check') {
             steps {
-                bat 'where docker'
-                bat 'docker --version'
-                bat 'docker compose version'
+                bat '''
+                docker --version
+                docker compose version
+                '''
             }
         }
+
 
 
 
