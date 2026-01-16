@@ -12,13 +12,11 @@ RUN npm run build
 # ---------- Runtime stage ----------
 FROM nginx:alpine
 
-# Remove default nginx config
 RUN rm /etc/nginx/conf.d/default.conf
 
-# Copy custom nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# IMPORTANT: Angular output path
+# IMPORTANT: Angular output path (from your logs)
 COPY --from=build /app/dist/loan-approval-ui/browser /usr/share/nginx/html
 
 EXPOSE 80
