@@ -8,6 +8,12 @@ pipeline {
 
     stages {
 
+        stage('AWS Identity Check') {
+            steps {
+                bat 'aws sts get-caller-identity'
+            }
+        }
+
         stage('Checkout Code') {
             steps {
                 git branch: 'main',
