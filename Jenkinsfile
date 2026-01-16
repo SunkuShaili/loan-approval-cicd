@@ -116,6 +116,19 @@ pipeline {
         }
     }
 
+    stage('Show Frontend Dockerfile') {
+        steps {
+            dir('frontend') {
+                bat 'type Dockerfile'
+            }
+        }
+    }
+
+
+
+
+
+
     post {
         success {
             echo '✅ CI Pipeline completed successfully. Images pushed to ECR.'
