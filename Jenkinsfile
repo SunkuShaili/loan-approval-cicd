@@ -16,6 +16,8 @@ pipeline {
 
     stages {
 
+        /* ================= AWS ================= */
+
         stage('AWS Identity Check') {
             steps {
                 withCredentials([
@@ -44,10 +46,18 @@ pipeline {
             }
         }
 
-        stage('Prepare Backend JAR') {
+        stage('Prepare Backend JAR (SAFE COPY)') {
             steps {
                 dir('backend') {
-                    bat 'copy target\\*SNAPSHOT.jar target\\app.jar'
+                    bat '''
+                    echo Preparing backend JAR...
+                    dir target
+                    for %f in (target\\*SNAPSHOT.jar) do (
+                      echo Copying %f to app.jar
+                      copy /Y %f target\\app.jar
+                    )
+                    dir target\\app.jar
+                    '''
                 }
             }
         }
@@ -94,7 +104,7 @@ pipeline {
         stage('Build Docker Images') {
             steps {
                 bat """
-                %DOCKER_PATH% build -t loan-backend-comp:1.0 backend
+                %DOCKER_PATH% build --no-cache -t loan-backend-comp:1.0 backend
                 %DOCKER_PATH% build --no-cache -t loan-frontend-comp:2.0 frontend
                 """
             }
@@ -123,8 +133,11 @@ pipeline {
 
         /* ================= VERIFICATION ================= */
 
-        stage('Show Frontend Dockerfile') {
+        stage('Show Backend & Frontend Dockerfiles') {
             steps {
+                dir('backend') {
+                    bat 'type Dockerfile'
+                }
                 dir('frontend') {
                     bat 'type Dockerfile'
                 }
@@ -134,10 +147,10 @@ pipeline {
 
     post {
         success {
-            echo '✅ CI pipeline completed successfully. Backend 1.0 and Frontend 2.0 pushed to ECR.'
+            echo '✅ CI pipeline SUCCESS: Backend 1.0 & Frontend 2.0 pushed to ECR'
         }
         failure {
-            echo '❌ Pipeline failed. Check logs above.'
+            echo '❌ CI pipeline FAILED: Check logs above'
         }
     }
 }
