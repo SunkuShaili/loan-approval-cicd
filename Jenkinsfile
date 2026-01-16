@@ -44,6 +44,19 @@ pipeline {
         }
 
 
+        stage('Build Frontend (Angular)') {
+            steps {
+                dir('frontend') {
+                    bat '''
+                    npm install
+                    npm run build
+                    '''
+                }
+            }
+        }
+
+
+
         stage('Docker Check') {
             steps {
                 bat '''
