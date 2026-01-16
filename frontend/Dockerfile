@@ -1,4 +1,4 @@
-# ---------- Build Stage ----------
+# ---------- Build stage ----------
 FROM node:20-alpine AS build
 
 WORKDIR /app
@@ -9,10 +9,17 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-# ---------- Runtime Stage ----------
+# ---------- Runtime stage ----------
 FROM nginx:alpine
 
-COPY --from=build /app/dist/loan-approval-ui /usr/share/nginx/html
+# Remove default nginx config
+RUN rm /etc/nginx/conf.d/default.conf
+
+# Copy custom nginx config
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# IMPORTANT: Angular output path
+COPY --from=build /app/dist/loan-approval-ui/browser /usr/share/nginx/html
 
 EXPOSE 80
 
